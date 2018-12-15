@@ -37,6 +37,7 @@ def run(input_arr, nc, bs):
     for cluster in clusters:
         poisonous = 0; edible = 0
         for i in cluster[0]:
+            if labels[i] == 0:
                 poisonous += 1
             elif labels[i] == 1:
                 edible += 1
