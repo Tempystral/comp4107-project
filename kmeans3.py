@@ -4,6 +4,7 @@ import scipy.linalg as la
 import matplotlib.pyplot as plt
 from sklearn.cluster import MiniBatchKMeans as KMeans
 import import_data
+import matplotlib.pyplot as plt
 
 #### Dataset ####
 #dataset_in = np.loadtxt("phonemes.csv", delimiter=",", dtype=str)
@@ -22,9 +23,6 @@ X = import_data.X #reshape_input(dataset_in)
 # To get a single case vector: X[n].T
 # To get a 2D array of the data without labels: X[1:,0,:-1]
 
-X_extracted = import_data.X[:,import_data.featureLists] #extracct some features from all
-
-
 #### Kmeans ####
 def run(input_arr, nc, bs):
     kmeans = KMeans(n_clusters = nc, batch_size = bs) # initialization is performed using kmeans++
@@ -34,6 +32,7 @@ def run(input_arr, nc, bs):
     def indices(i):
         return np.where(predictions == i)
     clusters = [indices(0), indices(1)]
+    results = []
 
     for cluster in clusters:
         poisonous = 0; edible = 0
@@ -46,14 +45,30 @@ def run(input_arr, nc, bs):
         print("poisonous: {}".format(poisonous))
         print("edible: {}\n".format(edible))
         count += 1
-    return clusters
+        results.append([poisonous, edible])
+    return results
 
 
 #### Testing ####
-#original_data = X[1:,0,:-1]
-#single_vector = X[1:,0,5:8]
-#U,s,V = la.svd(original_data)
 
-clusters = run(X, 2, 250)
-# print("After feature selections ... \n")
-# clusters = run(X_extracted, 2, 250)
+def calc_purity(results):
+    a = max(results[0])
+    b = max(results[1])
+    purity = (float)(a + b) / 8124 # The number of cases imported
+    return purity
+
+# print("K-means on unaltered data:")
+# results = run(X, 2, 250)
+# print("Purity: {}".format(calc_purity(results)))
+
+purityResult = []
+for i in range(1,23):
+    print("\nTest feature number {}".format(i))
+    X_extracted = import_data.X[:,import_data.featureSelection(i)] #extracct some features from all
+    results = run(X_extracted, 2, 250)
+    purityResult.append(calc_purity(results))
+    print("Purity: {}".format(calc_purity(results)))
+
+plt.plot(purityResult)
+plt.ylabel('accuracy')
+plt.show()

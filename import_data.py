@@ -48,16 +48,16 @@ def getLables(input_arr):
             print("ERROR")
     return oneHot_arr[1:]
 
-def featureSelection(x,y):
+def featureSelection(n_features):
     test = SelectKBest(score_func=chi2, k=10)
-    fit = test.fit(x,y)
+    fit = test.fit(X,Y)
     featureRankingList = fit.scores_
-    a = heapq.nlargest(14, featureRankingList)      # Select 14 most related features
+    featureRankingList = [x for x in featureRankingList if str(x) != 'nan']
+    a = heapq.nlargest(n_features, featureRankingList)      # Select most related features
     listOfFeatureIndex = []
     for i in a:
-        listOfFeatureIndex.append(featureRankingList.tolist().index(i))
+        listOfFeatureIndex.append(featureRankingList.index(i))
     return listOfFeatureIndex
 
 Y = getLables(dataset_in[1:])
 X = make_numeric(dataset_in[1:])
-featureLists = featureSelection(X,Y)
