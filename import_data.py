@@ -4,7 +4,7 @@ from sklearn.feature_selection import chi2
 import heapq
 
 csv = "mushroom.csv" # Dataset retrieved from https://www.openml.org/d/24
-ignore = "?"
+n_features = 14
 
 #### Dataset ####
 dataset_in = np.loadtxt(csv, delimiter=",", dtype=str)
@@ -34,7 +34,7 @@ def make_numeric(input_arr):
 		newTable = np.vstack((newTable, newRow))
 	return newTable[1:].T
 
-def getLables(input_arr):
+def getLabels(input_arr):
     label_arr = input_arr[:,22]
     oneHot_arr = np.zeros(2)
     for i in label_arr:
@@ -52,12 +52,12 @@ def featureSelection(x,y):
     test = SelectKBest(score_func=chi2, k=10)
     fit = test.fit(x,y)
     featureRankingList = fit.scores_
-    a = heapq.nlargest(14, featureRankingList)      # Select 14 most related features
+    a = heapq.nlargest(n_features, featureRankingList)      # Select 14 most related features
     listOfFeatureIndex = []
     for i in a:
         listOfFeatureIndex.append(featureRankingList.tolist().index(i))
     return listOfFeatureIndex
 
-Y = getLables(dataset_in[1:])
+Y = getLabels(dataset_in[1:])
 X = make_numeric(dataset_in[1:])
-featureLists = featureSelection(X,Y)
+featureLists = featureSelection(X,Y, n_features)
