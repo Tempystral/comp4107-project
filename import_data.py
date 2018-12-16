@@ -1,6 +1,6 @@
 import numpy as np
 
-csv = "mushroom.csv"
+csv = "mushroom.csv" # Dataset retrieved from https://www.openml.org/d/24
 ignore = "?"
 
 #### Dataset ####
