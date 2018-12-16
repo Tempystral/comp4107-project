@@ -22,6 +22,7 @@ X = import_data.X #reshape_input(dataset_in)
 # To get a single case vector: X[n].T
 # To get a 2D array of the data without labels: X[1:,0,:-1]
 
+X_extracted = import_data.X[:,import_data.featureLists] #extracct some features from all
 
 
 #### Kmeans ####
@@ -54,3 +55,5 @@ def run(input_arr, nc, bs):
 #U,s,V = la.svd(original_data)
 
 clusters = run(X, 2, 250)
+# print("After feature selections ... \n")
+# clusters = run(X_extracted, 2, 250)

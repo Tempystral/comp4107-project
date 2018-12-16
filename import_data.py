@@ -1,4 +1,7 @@
 import numpy as np
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+import heapq
 
 csv = "mushroom.csv"
 ignore = "?"
@@ -31,4 +34,30 @@ def make_numeric(input_arr):
 		newTable = np.vstack((newTable, newRow))
 	return newTable[1:].T
 
+def getLables(input_arr):
+    label_arr = input_arr[:,22]
+    oneHot_arr = np.zeros(2)
+    for i in label_arr:
+        if i=='p':
+            temp = np.asarray([1,0])
+            oneHot_arr = np.vstack((oneHot_arr,temp))
+        elif i=='e':
+            temp = np.asarray([0,1])
+            oneHot_arr = np.vstack((oneHot_arr,temp))
+        else:
+            print("ERROR")
+    return oneHot_arr[1:]
+
+def featureSelection(x,y):
+    test = SelectKBest(score_func=chi2, k=10)
+    fit = test.fit(x,y)
+    featureRankingList = fit.scores_
+    a = heapq.nlargest(14, featureRankingList)      # Select 14 most related features
+    listOfFeatureIndex = []
+    for i in a:
+        listOfFeatureIndex.append(featureRankingList.tolist().index(i))
+    return listOfFeatureIndex
+
+Y = getLables(dataset_in[1:])
 X = make_numeric(dataset_in[1:])
+featureLists = featureSelection(X,Y)
