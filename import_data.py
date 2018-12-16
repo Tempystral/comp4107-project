@@ -3,7 +3,7 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 import heapq
 
-csv = "mushroom.csv"
+csv = "mushroom.csv" # Dataset retrieved from https://www.openml.org/d/24
 ignore = "?"
 
 #### Dataset ####
