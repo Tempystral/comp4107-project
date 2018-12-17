@@ -49,7 +49,7 @@ def getLables(input_arr):
     return oneHot_arr[1:]
 
 def featureSelection(n_features):
-    test = SelectKBest(score_func=chi2, k=10)
+    test = SelectKBest(score_func=chi2, k=n_features)
     fit = test.fit(X,Y)
     featureRankingList = fit.scores_
     featureRankingList = [x for x in featureRankingList if str(x) != 'nan']
@@ -57,6 +57,7 @@ def featureSelection(n_features):
     listOfFeatureIndex = []
     for i in a:
         listOfFeatureIndex.append(featureRankingList.index(i))
+        # print(dataset_in[0][featureRankingList.index(i)])   # print feature ranking
     return listOfFeatureIndex
 
 Y = getLables(dataset_in[1:])
